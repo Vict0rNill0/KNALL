@@ -1,0 +1,58 @@
+// Google Apps Script backend for Sheets CRUD + search
+const SHEET_NAME = 'Tabelle1';        // set to your tab name
+const TOKEN = 'pAe549=+Iu2d';         // kept for reference, but auth is open
+
+function doGet(e) {
+  const q = (e.parameter.q || '').toLowerCase();
+  const rows = getData();
+  const filtered = q
+    ? rows.filter(r =>
+        (`${r.vorname} ${r.name}`).toLowerCase().includes(q) ||
+        (r.notfall1Name || '').toLowerCase().includes(q) ||
+        (r.notfall2Name || '').toLowerCase().includes(q))
+    : rows;
+  return json(filtered);
+}
+
+function doPost(e) {
+  const body = JSON.parse(e.postData.contents || '{}');
+  const { id, vorname, name, nf1Name, nf1Tel, nf1Bez, nf2Name, nf2Tel, nf2Bez } = body;
+  const sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
+  const rowNum = id ? Number(id) : null; // sheet row (1-based)
+
+  if (rowNum && rowNum > 1 && rowNum <= sheet.getLastRow()) {
+    sheet.getRange(rowNum, 1, 1, 8).setValues([[
+      vorname, name, nf1Name, nf1Tel, nf1Bez, nf2Name, nf2Tel, nf2Bez
+    ]]);
+    sheet.getRange(rowNum, 9).setValue(new Date());
+    return json({ status: 'updated', row: rowNum });
+  }
+
+  sheet.appendRow([vorname, name, nf1Name, nf1Tel, nf1Bez, nf2Name, nf2Tel, nf2Bez, new Date()]);
+  const newRow = sheet.getLastRow();
+  return json({ status: 'created', row: newRow });
+}
+
+// helpers
+function getData() {
+  const sheet = SpreadsheetApp.getActive().getSheetByName(SHEET_NAME);
+  const values = sheet.getDataRange().getValues();
+  values.shift(); // header
+  return values.map((r, i) => ({
+    id: i + 2, // row number (header is row 1)
+    vorname: r[0],
+    name: r[1],
+    notfall1Name: r[2],
+    notfall1Tel: r[3],
+    notfall1Bez: r[4],
+    notfall2Name: r[5],
+    notfall2Tel: r[6],
+    notfall2Bez: r[7],
+    updatedAt: r[8]
+  }));
+}
+
+function json(obj){
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
