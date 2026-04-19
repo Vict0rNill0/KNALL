@@ -11,28 +11,24 @@
       --accent: #2563eb;
       --border: #e3e8f0;
       --text: #111827;
+      --muted: #475569;
+      --soft: #f8fafc;
     }
     * { box-sizing: border-box; }
     body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
-    h1, h2 { margin: 0 0 12px; }
-    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+    h1, h2, h3, p { margin: 0; }
+    .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+    .panel.hidden { display: none; }
     label { display: block; margin-top: 8px; font-weight: 600; }
     input { width: 100%; padding: 10px; margin-top: 4px; border-radius: 8px; border: 1px solid var(--border); font-size: 15px; }
     button { background: var(--accent); color: #fff; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 15px; }
     button.secondary { background: #e5e7eb; color: #111; }
+    button.ghost { background: transparent; color: var(--accent); border: 1px solid #bfdbfe; }
     button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .row { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin: 8px 0; background: #fff; }
-    .row strong { font-size: 16px; }
-    #suggestions { position: relative; }
-    .suggest-box { position: absolute; background: #fff; border: 1px solid var(--border); border-radius: 10px; width: 100%; max-height: 220px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 10; }
-    .suggest { padding: 10px; cursor: pointer; }
-    .suggest:hover { background: #f3f4f6; }
-    .tag { display: inline-block; background: #fef3c7; color: #92400e; border-radius: 6px; padding: 2px 6px; font-size: 12px; margin-left: 6px; }
-    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .hero { display: flex; align-items: flex-start; gap: 12px; }
     .logo { width: 110px; height: auto; margin-left: auto; }
     .hero-text { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-    .hero-text { display: flex; flex-direction: column; gap: 4px; }
     .hero-title { font-size: 28px; font-weight: 700; line-height: 1.1; letter-spacing: 0.6px; }
     .hero-subtitle { font-size: 15px; font-weight: 700; display: flex; flex-wrap: wrap; gap: 2px; }
     .c1 { color: #e63946; }
@@ -40,11 +36,24 @@
     .c3 { color: #2a9d8f; }
     .c4 { color: #457b9d; }
     .c5 { color: #9b5de5; }
+    #suggestions { position: relative; margin-top: 10px; }
     .search-wrap { margin-top: 6px; border-radius: 10px; padding: 6px; background: repeating-linear-gradient(45deg,#facc15 0,#facc15 12px,#111 12px,#111 24px); }
     .search-wrap input { border: 3px solid #111; border-radius: 8px; width: 100%; padding: 10px; font-weight: 700; background: #fff; }
+    .suggest-box { position: absolute; background: #fff; border: 1px solid var(--border); border-radius: 10px; width: 100%; max-height: 220px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,0.08); z-index: 10; }
+    .suggest { padding: 10px; cursor: pointer; }
+    .suggest:hover { background: #f3f4f6; }
+    .help { background: var(--soft); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 12px; }
+    .help h3 { font-size: 16px; margin-bottom: 6px; }
+    .help p { color: var(--muted); line-height: 1.5; }
     .status { margin-top: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: #eff6ff; color: #1d4ed8; display: none; }
     .status.error { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
     .status.success { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .selected-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .selected-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; }
+    .selected-card p { margin-top: 6px; line-height: 1.5; }
+    .selected-empty { color: var(--muted); line-height: 1.5; }
+    .form-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .form-intro { color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
     @media (max-width: 640px) {
       .logo { width: 80px; }
       .hero-title { font-size: 24px; }
@@ -69,6 +78,7 @@
       </div>
       <img src="Logo_Kunterbunt.png" alt="Kunterbunt Logo" class="logo">
     </div>
+
     <div id="suggestions">
       <label>Suche und wähle eine Person.</label>
       <div class="search-wrap">
@@ -76,10 +86,31 @@
       </div>
       <div id="suggestBox" class="suggest-box" style="display:none"></div>
     </div>
+
+    <div class="help">
+      <h3>So findest du die Kontaktdaten</h3>
+      <p>Wenn du die Kontaktdaten einer Person suchst, trage hier den Vor- oder Nachnamen ein und klicke anschließend auf die gewünschte Person. Die hinterlegten Daten werden dann darunter angezeigt.</p>
+    </div>
+
+    <div class="help">
+      <h3>Eigene Daten bearbeiten oder neu anlegen</h3>
+      <p>Wenn du deine eigenen Daten bearbeiten möchtest, suche zuerst nach deinem Namen und klicke dann auf „Daten bearbeiten“. Falls du noch nicht in der Liste bist, klicke auf „Lehrkraft hinzufügen“.</p>
+      <div class="actions">
+        <button type="button" onclick="startAddTeacher()">Lehrkraft hinzufügen</button>
+      </div>
+    </div>
+
     <div id="status" class="status"></div>
   </div>
 
-  <div class="panel">
+  <div id="selectedPanel" class="panel hidden">
+    <div class="selected-title">Ausgewählte Person</div>
+    <div id="selectedContent" class="selected-empty">Noch keine Person ausgewählt.</div>
+  </div>
+
+  <div id="formPanel" class="panel hidden">
+    <div id="formTitle" class="form-title">Daten bearbeiten</div>
+    <div id="formIntro" class="form-intro">Bitte prüfe die Daten sorgfältig, bevor du speicherst.</div>
     <form id="form" onsubmit="save(event)">
       <input type="hidden" id="id">
       <label>Vorname <input id="vorname" required></label>
@@ -92,92 +123,172 @@
       <label>Beziehung der zweiten Kontaktperson <input id="nf2Bez"></label>
       <div class="actions">
         <button type="submit">Speichern</button>
-        <button type="button" class="secondary" onclick="resetForm()">Felder leeren</button>
+        <button type="button" class="secondary" onclick="cancelEdit()">Abbrechen</button>
+        <button type="button" class="ghost" onclick="resetForm()">Felder leeren</button>
       </div>
     </form>
   </div>
-
-  <div id="list" style="margin-top:12px;"></div>
 
 <script>
 const BASE = 'https://script.google.com/macros/s/AKfycbyMXIWipxnIuU68JSV-X32ax09YEFm4Xzz7zLuQPbvagSfL7e09HpvhHU3kNNBtxJU3dQ/exec';
 
 let cache = [];
 let isSaving = false;
+let selectedId = null;
+let formMode = 'edit';
 
 async function loadAll() {
   try {
     setStatus('Lade Daten ...');
     cache = await fetchJson(BASE);
-    render(cache);
+    refreshSelectedView();
     clearStatus();
   } catch (err) {
-    render([]);
     setStatus(`Fehler beim Laden: ${err.message}`, 'error');
   }
 }
 
-function render(rows) {
-  const list = document.getElementById('list');
-  if (!rows.length) { list.innerHTML = '<p>Keine Einträge.</p>'; return; }
-  list.innerHTML = rows.map(r => {
-    const missing = missingFields(r);
-    return `
-      <div class="row">
-        <strong>${escape(r.vorname)} ${escape(r.name)}</strong>
-        ${missing.length ? `<span class="tag">${missing.join(', ')} fehlen</span>` : ''}<br>
-        NF1: ${fmt(r.notfall1Name)} (${fmt(r.notfall1Tel)}) ${fmt(r.notfall1Bez)}<br>
-        NF2: ${fmt(r.notfall2Name)} (${fmt(r.notfall2Tel)}) ${fmt(r.notfall2Bez)}<br>
-        <button onclick='edit(${r.id})'>Bearbeiten</button>
-      </div>`;
-  }).join('');
-}
-
-function fmt(v){ return v ? escape(v) : '—'; }
-function missingFields(r){
-  const miss = [];
-  if (!r.notfall1Name) miss.push('NF1 Name');
-  if (!r.notfall1Tel) miss.push('NF1 Tel');
-  if (!r.notfall2Name) miss.push('NF2 Name');
-  if (!r.notfall2Tel) miss.push('NF2 Tel');
-  return miss;
-}
-
 function suggest() {
-  const q = document.getElementById('search').value.toLowerCase();
+  const q = document.getElementById('search').value.trim().toLowerCase();
   const box = document.getElementById('suggestBox');
-  if (!q) { box.style.display = 'none'; box.innerHTML = ''; return; }
+
+  if (!q) {
+    hideSuggestions();
+    return;
+  }
+
   const matches = cache
-    .filter(r => (`${r.vorname} ${r.name}`).toLowerCase().includes(q))
+    .filter(r => (`${r.vorname || ''} ${r.name || ''}`).toLowerCase().includes(q))
     .slice(0, 8);
-  if (!matches.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
-  box.innerHTML = matches.map(r => `<div class="suggest" onclick="choose(${r.id})">${escape(r.vorname)} ${escape(r.name)}</div>`).join('');
+
+  if (!matches.length) {
+    box.innerHTML = '<div class="suggest">Keine passende Person gefunden.</div>';
+    box.style.display = 'block';
+    return;
+  }
+
+  box.innerHTML = matches
+    .map(r => `<div class="suggest" onclick="choose(${Number(r.id)})">${escapeHtml(r.vorname)} ${escapeHtml(r.name)}</div>`)
+    .join('');
   box.style.display = 'block';
 }
 
-function choose(id){ edit(id); document.getElementById('suggestBox').style.display='none'; }
-
-function edit(id){
-  const r = cache.find(x => x.id === id);
-  if(!r) return;
-  document.getElementById('id').value = r.id;
-  set('vorname', r.vorname); set('name', r.name);
-  set('nf1Name', r.notfall1Name); set('nf1Tel', r.notfall1Tel); set('nf1Bez', r.notfall1Bez);
-  set('nf2Name', r.notfall2Name); set('nf2Tel', r.notfall2Tel); set('nf2Bez', r.notfall2Bez);
+function hideSuggestions() {
+  const box = document.getElementById('suggestBox');
+  box.style.display = 'none';
+  box.innerHTML = '';
 }
 
-function set(id,v){ document.getElementById(id).value = v || ''; }
+function choose(id) {
+  selectedId = Number(id);
+  hideSuggestions();
+  refreshSelectedView();
+}
 
-async function save(e){
+function refreshSelectedView() {
+  const panel = document.getElementById('selectedPanel');
+  const content = document.getElementById('selectedContent');
+  const person = getSelectedPerson();
+
+  if (!person) {
+    panel.classList.add('hidden');
+    content.innerHTML = '';
+    return;
+  }
+
+  panel.classList.remove('hidden');
+  content.innerHTML = `
+    <div class="selected-card">
+      <strong>${escapeHtml(person.vorname)} ${escapeHtml(person.name)}</strong>
+      <p><strong>1. Kontaktperson:</strong> ${fmt(person.notfall1Name)}<br>${fmt(person.notfall1Tel)}<br>${fmt(person.notfall1Bez)}</p>
+      <p><strong>2. Kontaktperson:</strong> ${fmt(person.notfall2Name)}<br>${fmt(person.notfall2Tel)}<br>${fmt(person.notfall2Bez)}</p>
+      <div class="actions">
+        <button type="button" onclick="startEditSelected()">Daten bearbeiten</button>
+      </div>
+    </div>`;
+}
+
+function startEditSelected() {
+  const person = getSelectedPerson();
+  if (!person) return;
+  if (!window.confirm(`Möchtest du die Daten von ${person.vorname} ${person.name} wirklich bearbeiten?`)) return;
+
+  formMode = 'edit';
+  setFormHeader('Daten bearbeiten', 'Die gespeicherten Daten wurden übernommen. Bitte ändere nur die Felder, die angepasst werden sollen.');
+  fillForm(person);
+  showFormPanel();
+}
+
+function startAddTeacher() {
+  formMode = 'create';
+  selectedId = null;
+  document.getElementById('search').value = '';
+  hideSuggestions();
+  hideSelectedPanel();
+  setFormHeader('Neue Lehrkraft hinzufügen', 'Trage die Daten der neuen Lehrkraft und ihrer Kontaktpersonen ein und speichere danach den Eintrag.');
+  resetForm();
+  showFormPanel();
+}
+
+function showFormPanel() {
+  document.getElementById('formPanel').classList.remove('hidden');
+  window.scrollTo({ top: document.getElementById('formPanel').offsetTop - 12, behavior: 'smooth' });
+}
+
+function hideSelectedPanel() {
+  document.getElementById('selectedPanel').classList.add('hidden');
+  document.getElementById('selectedContent').innerHTML = '';
+}
+
+function setFormHeader(title, intro) {
+  document.getElementById('formTitle').textContent = title;
+  document.getElementById('formIntro').textContent = intro;
+}
+
+function getSelectedPerson() {
+  return cache.find(x => Number(x.id) === Number(selectedId));
+}
+
+function fillForm(person) {
+  document.getElementById('id').value = person.id || '';
+  set('vorname', person.vorname);
+  set('name', person.name);
+  set('nf1Name', person.notfall1Name);
+  set('nf1Tel', person.notfall1Tel);
+  set('nf1Bez', person.notfall1Bez);
+  set('nf2Name', person.notfall2Name);
+  set('nf2Tel', person.notfall2Tel);
+  set('nf2Bez', person.notfall2Bez);
+}
+
+function set(id, value) {
+  document.getElementById(id).value = value ?? '';
+}
+
+async function save(e) {
   e.preventDefault();
   if (isSaving) return;
+
   const body = {
     id: val('id') || undefined,
-    vorname: val('vorname'), name: val('name'),
-    nf1Name: val('nf1Name'), nf1Tel: val('nf1Tel'), nf1Bez: val('nf1Bez'),
-    nf2Name: val('nf2Name'), nf2Tel: val('nf2Tel'), nf2Bez: val('nf2Bez')
+    vorname: val('vorname'),
+    name: val('name'),
+    nf1Name: val('nf1Name'),
+    nf1Tel: val('nf1Tel'),
+    nf1Bez: val('nf1Bez'),
+    nf2Name: val('nf2Name'),
+    nf2Tel: val('nf2Tel'),
+    nf2Bez: val('nf2Bez')
   };
+
+  const label = formMode === 'create'
+    ? `${body.vorname} ${body.name}`.trim() || 'die neue Lehrkraft'
+    : `${body.vorname} ${body.name}`.trim();
+
+  if (!window.confirm(`Möchtest du die Daten für ${label} jetzt speichern?`)) return;
+
   const submitButton = document.querySelector('#form button[type="submit"]');
+
   try {
     isSaving = true;
     submitButton.disabled = true;
@@ -187,9 +298,21 @@ async function save(e){
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(body)
     });
-    resetForm();
+
     await loadAll();
-    setStatus('Eintrag gespeichert.', 'success');
+
+    if (formMode === 'edit' && body.id) {
+      selectedId = Number(body.id);
+      refreshSelectedView();
+    } else {
+      selectedId = findPersonId(body.vorname, body.name);
+      refreshSelectedView();
+    }
+
+    resetForm();
+    document.getElementById('formPanel').classList.add('hidden');
+    setStatus('Die Daten wurden erfolgreich gespeichert.', 'success');
+    window.alert('Die Daten wurden erfolgreich gespeichert.');
   } catch (err) {
     setStatus(`Fehler beim Speichern: ${err.message}`, 'error');
   } finally {
@@ -198,19 +321,42 @@ async function save(e){
   }
 }
 
-function resetForm(){ document.getElementById('form').reset(); document.getElementById('id').value=''; }
-function val(id){ return document.getElementById(id).value.trim(); }
-
-function showMissing(){
-  const missingOnly = cache.filter(r => missingFields(r).length);
-  render(missingOnly);
+function findPersonId(vorname, name) {
+  const match = cache.find(r =>
+    normalize(r.vorname) === normalize(vorname) &&
+    normalize(r.name) === normalize(name)
+  );
+  return match ? Number(match.id) : null;
 }
 
-function escape(str){
-  return (str || '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'': '&#39;'}[s]));
+function normalize(value) {
+  return String(value || '').trim().toLowerCase();
 }
 
-async function fetchJson(url, options){
+function cancelEdit() {
+  document.getElementById('formPanel').classList.add('hidden');
+  resetForm();
+}
+
+function resetForm() {
+  document.getElementById('form').reset();
+  document.getElementById('id').value = '';
+}
+
+function val(id) {
+  return document.getElementById(id).value.trim();
+}
+
+function fmt(value) {
+  const safe = String(value ?? '').trim();
+  return safe ? escapeHtml(safe) : '—';
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[s]));
+}
+
+async function fetchJson(url, options) {
   const response = await fetch(url, options);
   const text = await response.text();
   if (!response.ok) {
@@ -223,14 +369,14 @@ async function fetchJson(url, options){
   }
 }
 
-function setStatus(message, type){
+function setStatus(message, type) {
   const box = document.getElementById('status');
   box.textContent = message;
   box.className = `status${type ? ` ${type}` : ''}`;
   box.style.display = 'block';
 }
 
-function clearStatus(){
+function clearStatus() {
   const box = document.getElementById('status');
   box.textContent = '';
   box.className = 'status';
